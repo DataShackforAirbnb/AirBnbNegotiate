@@ -491,6 +491,70 @@ select.form-control {
     top: -29px;
 }
 
+.tile-type01 .list-item--price, 
+.tile-type02 .list-item--price {
+    float: left;
+    margin-top: 22px;
+    text-align: right;
+    width: 78px;
+}
+
+.tile-type01 .original-price, 
+.tile-type02 .original-price {
+    font-size: 2.2em;
+    font-weight: 800;
+    margin-top: 10px;
+}
+
+.tile-type01 .list-item--discount {
+    color: #ffa000;
+    float: right;
+    font-size: 2.2em;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+    margin-top: 22px;
+    margin-right: 0;
+    text-align: right;
+    width: 220px;
+}
+
+.tile-type02 .list-item--discount {
+    color: #ff5252;
+    float: right;
+    font-size: 1em;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    margin-top: 22px;
+    margin-right: 0;
+    text-align: center;
+    width: 250px;
+}
+
+.tile-type02 .discount-price--label {
+    margin-bottom: 0;
+}
+.tile-type02 .discount-price--title {
+    color: #212121;
+    font-size: 0.9em;
+    font-weight: 400;
+    margin-bottom: 2px;
+    text-align: left;
+}
+
+.tile-type02 .discount-price--box {
+    float: left;
+    width: 33%;
+}
+
+.tile-type02 .discount-price {
+    color: #ff5252;
+    font-size: 2.4em;
+    font-weight: 800;
+    line-height: 0.9;
+    position: static;
+}
+
 
 /* FOOTER */
 
@@ -513,7 +577,7 @@ footer {
 
 /* Small devices (tablets, 768px and up) */
 
-@media (max-width: 460px) {
+@media (max-width: 580px) {
     .list-item--pic {
         height: 140px;
         margin-bottom: 20px;
@@ -522,23 +586,38 @@ footer {
         height: 250px;
         position: relative;
     }
-    .price-copy {
-        
-    }
     .list-item--price {
         float: none;
         text-align: left;
-    }
-    .original-price {
-        
     }
     .list-item--discount {
         bottom: -35px;
         right: 16px;
         position: absolute;
     }
-    .discount-price {
-        
+    .tile-type01 .original-price, 
+    .tile-type02 .original-price {
+        font-size: 1.8em;
+        margin-top: 4px;
+    }
+    .tile-type01 .list-item--discount {
+        bottom: 12px;
+        font-size: 1.8em;
+        right: 16px;
+        position: absolute;
+    }
+    .tile-type02 .list-item--discount {
+        margin-top: -68px;
+        width: 190px;
+    }
+    .tile-type02 .discount-price--label  {
+        font-size: 0.9em;
+    }
+    .tile-type02 .discount-price--title  {
+        margin-bottom: -2px;
+    }
+    .tile-type02 .discount-price {
+        font-size: 1.7em;
     }
 }
 
@@ -711,6 +790,27 @@ footer {
     }
     .discount-price {
         left: 64px;
+    }
+    .tile-type01 .list-item--price,
+    .tile-type02 .list-item--price {
+        margin-top: 16px;
+        width: 86px;
+    }
+    .tile-type01 .list-item--discount {
+        font-size: 1.6em;
+        margin-top: 30px;
+        width: 178px;
+    }
+    .tile-type02 .list-item--discount {
+        margin-top: 16px;
+        width: 230px;
+    }
+    .tile-type02 .discount-price--title {
+        font-size: 1em;
+        padding-left: 12px;
+    }
+    .tile-type02 .discount-price {
+        font-size: 2.2em;
     }
     /* FOOTER */
     .footer {
