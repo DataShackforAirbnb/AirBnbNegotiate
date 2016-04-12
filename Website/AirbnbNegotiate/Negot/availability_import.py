@@ -20,9 +20,12 @@ def find_availability(parsed_calendars):
     for k, v in parsed_calendars.iteritems():
         condition = np.array(v['availability'])
         avai = np.where(np.concatenate(([condition[0]], condition[:-1] != condition[1:], [True])))[0]
-        start = v['date'][list(avai[::2])]
-        end = v['date'][sorted(list(set(avai) - set(avai[::2])))]
-        availability += zip([k]* len(start), start, end)
+        start_idx = list(avai[::2])
+        end_idx = sorted(list(set(avai) - set(avai[::2])))
+        start = v['date'][start_idx]
+        end = v['date'][end_idx]
+        avg_price = [np.mean(v['price_USD'][start_idx[i]:end_idx[i]]) for i in range(len(end))]
+        availability += zip([k]* len(start), start, end, avg_price)
 
     return [x for x in availability if x[2]==x[2]]
 
@@ -31,7 +34,7 @@ def import_availability(parsed_calendars):
     failed_import = []
     for avai in availabilities:
         try:
-            db_item = Availability(property_id = Listing.objects.all().get(airBnbId = int(avai[0])), start_date = avai[1], end_date = avai[2])
+            db_item = Availability(property_id = Listing.objects.all().get(airBnbId = int(avai[0])), start_date = avai[1], end_date = avai[2], avg_price = avai[3])
             db_item.save()
         except:
             failed_import.append(avai[0])

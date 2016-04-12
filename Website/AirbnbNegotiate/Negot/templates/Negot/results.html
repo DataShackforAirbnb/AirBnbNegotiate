@@ -82,7 +82,45 @@
         </div>
         <div class="filters hidden-xs" id="filters">
             <div class="filters-map hidden-xs hidden-sm">
-                
+                <script src='https://maps.googleapis.com/maps/api/js?v=3.exp'></script>
+                <div style='overflow:hidden;height:100%;width:100%;'>
+                    <div id='gmap_canvas' style='height:100%;width:100%;'></div>
+                    <div><small><a href="http://www.proxysitereviews.com/">proxies</a></small></div>
+                    <style>#gmap_canvas img{max-width:none!important;background:none!important}</style>
+                </div>
+                <script type='text/javascript'>
+                    var markers = [
+                        {% for listing in listings %}
+                        ['{{ listing.property_id.name }}',
+                        {{listing.property_id.latitude}},
+                        {{ listing.property_id.longitude }}],
+                        {% endfor %}
+                    ]
+                    function init_map(){
+                        var myOptions = {
+                            zoom:11,
+                            center:new google.maps.LatLng(40.71278370000001,-74.00594130000003),
+                            mapTypeId: google.maps.MapTypeId.ROADMAP};
+                        var map = new google.maps.Map(document.getElementById('gmap_canvas'), myOptions);
+                        var infowindow = new google.maps.InfoWindow(), marker, i;
+                        for (i = 0; i < markers.length; i++) {
+                            console.log(markers[i]);
+                            marker = new google.maps.Marker({
+                                position: new google.maps.LatLng(markers[i][1], markers[i][2]),
+                                map: map
+                            });
+                            google.maps.event.addListener(marker, 'click', (function(marker, i){
+                                return function() {
+                                    infowindow.setContent(markers[i][0]);
+                                    infowindow.open(map, marker);
+                                }
+                            })(marker, i));
+                            infowindow.open(map,marker);
+                        }
+                    }
+                    google.maps.event.addDomListener(window, 'load', init_map);
+
+                </script>
             </div>
             <div class="filters-copy">
                 <h2 class="filters-title">Filters</h2>
@@ -462,7 +500,35 @@
             <div class="clearfix"></div>
             <div class="listings-list">
                 {% for listing in listings %}
-                <div class="listing-list--item">
+                {% widthratio listing.property_id.price 100 80 as discount_threshold %}
+
+                <script type='text/javascript'>
+                    console.log({{ discount_threshold}})
+                    console.log({{ listing.avg_price }})
+                    console.log({{ discount_threshold }} >= {{ listing.avg_price }})
+                </script>
+
+                {% if listing.property_id.price >= listing.avg_price %}
+                <div class="listing-list--item tile-type01">
+                    <div class="list-item--pic">
+                        <img class="list-item--img" src= "{{ listing.property_id.picture_url }}" style="width:150px;height:150px;" />
+                    </div>
+                    <div class="list-item--copy">
+                        <h2 class="list-item--title" data-toggle="tooltip" data-placement="top" title="{{ listing.property_id.name }}"><a  href={{ listing.property_id.url }}> {{ listing.property_id.name }} </a></h2>
+                        <p class="list-item--subtitle"><span class="list-item--hostname"><a  href={{ listing.property_id.host_url }}>{{ listing.property_id.host_name }}</a></span> &middot; <span class="list-item--reviews">{{ listing.property_id.number_of_reviews }}</span> reviews &middot; <span class="list-item--stars"><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star_half</i><i class="material-icons star">star_border</i></span></p>
+                        <div class="list-item--price">
+                            <p class="price-copy">Original price</p>
+                            <p class="original-price"><span class="price">{{ listing.property_id.price }}</span><sup class="dollar-sign">$</sup></p>
+                        </div>
+                        <div class="list-item--discount">
+                            <p class="price-copy">No discount but great deal!!</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if listing.property_id.price < listing.avg_price %}
+                <div class="listing-list--item tile-type02">
                     <div class="list-item--pic">
                         <img class="list-item--img" src= "{{ listing.property_id.picture_url }}" style="width:150px;height:150px;" />
                     </div>
@@ -474,29 +540,24 @@
                             <p class="original-price"><span class="price">{{ listing.property_id.price }}</span><sup class="dollar-sign">$</sup></p>
                         </div>
                         <div class="list-item--discount">
-                            <p class="price-copy">Might accept up to</p>
-                            <p class="discount-price"><span class="discount">10</span>%</p>
+                            <p class="discount-price--title">Discount</p>
+                            <div class="discount-price--box discount-likely">
+                                <p class="discount-price--label">likely</p>
+                                <p class="discount-price"><span class="likely-price">5</span>%</p>
+                            </div>
+                            <div class="discount-price--box discount-maybe">
+                                <p class="discount-price--label">maybe</p>
+                                <p class="discount-price"><span class="maybe-price">8</span>%</p>
+                            </div>
+                            <div class="discount-price--box discount-hardly">
+                                <p class="discount-price--label">hardly</p>
+                                <p class="discount-price"><span class="hardly-price">15</span>%</p>
+                            </div>
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 {% endfor %}
-                <!--<div class="listing-list&#45;&#45;item">-->
-                    <!--<div class="list-item&#45;&#45;pic">-->
-                        <!--<img class="list-item&#45;&#45;img"/>-->
-                    <!--</div>-->
-                    <!--<div class="list-item&#45;&#45;copy">-->
-                        <!--<h2 class="list-item&#45;&#45;title">Host property</h2>-->
-                        <!--<p class="list-item&#45;&#45;subtitle"><span class="list-item&#45;&#45;hostname">Host name</span> &middot; <span class="list-item&#45;&#45;reviews">#</span> reviews &middot; <span class="list-item&#45;&#45;stars"><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star_half</i><i class="material-icons star">star_border</i></span></p>-->
-                        <!--<div class="list-item&#45;&#45;price">-->
-                            <!--<p class="price-copy">Original price</p>-->
-                            <!--<p class="original-price"><span class="price">60</span><sup class="dollar-sign">$</sup></p>-->
-                        <!--</div>-->
-                        <!--<div class="list-item&#45;&#45;discount">-->
-                            <!--<p class="price-copy">Might accept up to</p>-->
-                            <!--<p class="discount-price"><span class="discount">10</span>%</p>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
             </div>
         </div>
     </main>

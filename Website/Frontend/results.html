@@ -14,6 +14,47 @@
 </head>
 
 <body>
+   
+    <!-- MODAL AUTH -->
+    <div class="modal fade" id="auth" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-firstblock">
+                        <h4 class="modal-copy">Login with:</h4>
+                        <button type="submit" class="btn btn-default btn-success btn-block search-btn btn-google"><img src="/static/Negot/img/btn_google_dark_normal_ios.svg">Sign in with Google</button>
+                    </div>
+                    <div class="modal-secondblock">
+                        <h4 class="modal-copy"><span class="or">or</span></h4>
+                        <h4 class="modal-copy">Use or Negot.io account:</h4>
+                        <form role="form" action="">
+                            <div class="form-group">
+                                <input type="text" name="username" class="form-control" placeholder="Email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="psw" class="form-control" placeholder="Password">
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" checked><span class="remember-me">Remember me</span></label>
+                            </div>
+                            <button type="submit" value="submit" class="btn btn-default btn-success btn-block search-btn login-btn">Login</button>
+                            <button type="submit" value="submit" class="btn btn-default btn-success btn-block search-btn signup-btn">Sign Up</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <p class="remember-me"><span class="member">Not a member?</span> <span class="signup">Sign Up</span></p>
+                    <p class="remember-me">Forgot <a href="#">Password?</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- NAVBAR -->
     <nav class="navbar" role="navigation">
         <div class="container">
@@ -21,12 +62,12 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#Menu">
                     <i class="material-icons menu-btn">menu</i>
                 </button>
-                <a class="navbar-brand" href="index.html">Negot.io</a>
+                <a class="navbar-brand" href="{% url 'index'%}">Negot.io</a>
             </div>
             <div class="collapse navbar-collapse" id="Menu">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a class="menu-link" href="about.html">About</a></li>
-                    <li><a class="navbar-signin menu-link" href="#">Sign in</a></li>
+                    <li><a class="menu-link" href="{% url 'about'%}">About</a></li>
+                    <li><a class="navbar-signin menu-link" data-toggle="modal" href="#auth">Sign in</a></li>
                 </ul>
             </div>
         </div>
@@ -49,13 +90,13 @@
                     <div class="row filters-row">
                         <div class="col-xs-12 filters-label"><p>Price range</p></div>
                         <div class="col-xs-12">
-                            <input type="text" class="price-range" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="1" data-slider-value="[250,450]" data-slider-tooltip="hide"/>
+                            <input type="text" class="price-range" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="1" data-slider-value="[10,1000]" data-slider-tooltip="hide"/>
                         </div>
                         <div class="filters-low--range col-xs-6">
-                            <p>$<span class="low-value">250</span></p>
+                            <p>$<span class="low-value">10</span></p>
                         </div>
                         <div class="filters-high--range col-xs-6">
-                            <p>$<span class="high-value">450</span></p>
+                            <p>$<span class="high-value">1000</span></p>
                         </div>
                     </div>
                 </div>
@@ -99,55 +140,373 @@
                         <div class="col-sm-1 filters-dropdown hidden-sm hidden-md hidden-lg"><p class="other">Other</p></div>
                     </div>
                 </div>
+                <div class="filters-section filters-location filters-more">
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Alphabet City" name="neighborhood">
+                                <span>Alphabet City</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Astoria" name="neighborhood">
+                                <span>Astoria</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Bedford-Stuyvesant" name="neighborhood">
+                                <span>Bedford-Stuyvesant</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Boerum Hill" name="neighborhood">
+                                <span>Boerum Hill</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Brooklyn Heights" name="neighborhood">
+                                <span>Brooklyn Heights</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Bushwick" name="neighborhood">
+                                <span>Bushwick</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Carroll Gardens" name="neighborhood">
+                                <span>Carroll Gardens</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Chelsea" name="neighborhood">
+                                <span>Chelsea</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Chinatown" name="neighborhood">
+                                <span>Chinatown</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Clinton Hill" name="neighborhood">
+                                <span>Clinton Hill</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Crown Heights" name="neighborhood">
+                                <span>Crown Heights</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Downtown Brooklyn" name="neighborhood">
+                                <span>Downtown Brooklyn</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="East Flatbush" name="neighborhood">
+                                <span>East Flatbush</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="East Harlem" name="neighborhood">
+                                <span>East Harlem</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="East New York" name="neighborhood">
+                                <span>East New York</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="East Village" name="neighborhood">
+                                <span>East Village</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Elmhurst" name="neighborhood">
+                                <span>Elmhurst</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Financial District" name="neighborhood">
+                                <span>Financial District</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Flatbush" name="neighborhood">
+                                <span>Flatbush</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Flatiron District" name="neighborhood">
+                                <span>Flatiron District</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Flushing" name="neighborhood">
+                                <span>Flushing</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Fort Greene" name="neighborhood">
+                                <span>Fort Greene</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Gowanus" name="neighborhood">
+                                <span>Gowanus</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Gramercy Park" name="neighborhood">
+                                <span>Gramercy Park</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Greenpoint" name="neighborhood">
+                                <span>Greenpoint</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Greenwich Village" name="neighborhood">
+                                <span>Greenwich Village</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Hamilton Heights" name="neighborhood">
+                                <span>Hamilton Heights</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Harlem" name="neighborhood">
+                                <span>Harlem</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Hell's Kitchen" name="neighborhood">
+                                <span>Hell's Kitchen</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Inwood" name="neighborhood">
+                                <span>Inwood</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Jackson Heights" name="neighborhood">
+                                <span>Jackson Heights</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Jamaica" name="neighborhood">
+                                <span>Jamaica</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Kips Bay" name="neighborhood">
+                                <span>Kips Bay</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Lefferts Garden" name="neighborhood">
+                                <span>Lefferts Garden</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Long Island City" name="neighborhood">
+                                <span>Long Island City</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Lower East Side" name="neighborhood">
+                                <span>Lower East Side</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Midtown East" name="neighborhood">
+                                <span>Midtown East</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Morningside Heights" name="neighborhood">
+                                <span>Morningside Heights</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Murray Hill" name="neighborhood">
+                                <span>Murray Hill</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Nolita" name="neighborhood">
+                                <span>Nolita</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Park Slope" name="neighborhood">
+                                <span>Park Slope</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Prospect Heights" name="neighborhood">
+                                <span>Prospect Heights</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Queens" name="neighborhood">
+                                <span>Queens</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Ridgewood" name="neighborhood">
+                                <span>Ridgewood</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Soho" name="neighborhood">
+                                <span>Soho</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Staten Island" name="neighborhood">
+                                <span>Staten Island</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Sunnyside" name="neighborhood">
+                                <span>Sunnyside</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Sunset Park" name="neighborhood">
+                                <span>Sunset Park</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="The Bronx" name="neighborhood">
+                                <span>The Bronx</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="The Rockaways" name="neighborhood">
+                                <span>The Rockaways</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Tribeca" name="neighborhood">
+                                <span>Tribeca</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Upper East Side" name="neighborhood">
+                                <span>Upper East Side</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Upper West Side" name="neighborhood">
+                                <span>Upper West Side</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Washington Heights" name="neighborhood">
+                                <span>Washington Heights</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row filters-row">
+                        <div class="col-sm-11">   
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="West Village" name="neighborhood">
+                                <span>West Village</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Williamsburg" name="neighborhood">
+                                <span>Williamsburg</span>
+                            </div>
+                            <div class="filters-radio col-sm-4">
+                                <input type="checkbox" value="Windsor Terrace" name="neighborhood">
+                                <span>Windsor Terrace</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="listings">
             <div class="listings-header">
                 <h1 class="listings-header--location">New York NY, United States</h1>
                 <div class="listings-header--copy">
-                    <p class="listings-header--dates"><span class="listings-header--checkin">Check In Date</span> - <span class="listings-header--checkout">Check Out Date</span></p>
+                    <p class="listings-header--dates"><span class="listings-header--checkin">{{ checkin_date }}</span> - <span class="listings-header--checkout">{{ checkout_date }}</span></p>
                     <p class="listings-header--guests">Guests</p>
                 </div>
                 <div class="listings-header--btn">
-                    <button type="button" class="btn btn-default search-btn" onclick="document.location.href='/index.html'">New Search</button>
+                    <button type="button" class="btn btn-default search-btn" onclick="{% url 'index'%}">New Search</button>
                 </div>
             </div>
             <div class="clearfix"></div>
             <div class="listings-list">
-                <div class="listing-list--item">
+                <!--{% for listing in listings %}-->
+                <div class="listing-list--item tile-type01">
                     <div class="list-item--pic">
-                        <img class="list-item--img"/>
+                        <img class="list-item--img" src= "{{ listing.property_id.picture_url }}" style="width:150px;height:150px;" />
                     </div>
                     <div class="list-item--copy">
-                        <h2 class="list-item--title">Host property</h2>
-                        <p class="list-item--subtitle"><span class="list-item--hostname">Host name</span> &middot; <span class="list-item--reviews">#</span> reviews &middot; <span class="list-item--stars"><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star_half</i><i class="material-icons star">star_border</i></span></p>
+                        <h2 class="list-item--title" data-toggle="tooltip" data-placement="top" title="{{ listing.property_id.name }}"><a  href={{ listing.property_id.url }}><!--{{ listing.property_id.name }}-->Property 01</a></h2>
+                        <p class="list-item--subtitle"><span class="list-item--hostname"><a  href={{ listing.property_id.host_url }}><!--{{ listing.property_id.host_name }}-->Owner 01</a></span> &middot; <span class="list-item--reviews"><!--{{ listing.property_id.number_of_reviews }}-->reviews</span> reviews &middot; <span class="list-item--stars"><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star_half</i><i class="material-icons star">star_border</i></span></p>
                         <div class="list-item--price">
                             <p class="price-copy">Original price</p>
-                            <p class="original-price"><span class="price">60</span><sup class="dollar-sign">$</sup></p>
+                            <p class="original-price"><span class="price"><!--{{ listing.property_id.price }}-->60</span><sup class="dollar-sign">$</sup></p>
                         </div>
                         <div class="list-item--discount">
-                            <p class="price-copy">Might accept up to</p>
-                            <p class="discount-price"><span class="discount">10</span>%</p>
+                            <p class="price-copy">No discount but great deal!!</p>
                         </div>
                     </div>
                 </div>
-                <div class="listing-list--item">
+                <div class="listing-list--item tile-type02">
                     <div class="list-item--pic">
-                        <img class="list-item--img"/>
+                        <img class="list-item--img" src= "{{ listing.property_id.picture_url }}" style="width:150px;height:150px;" />
                     </div>
                     <div class="list-item--copy">
-                        <h2 class="list-item--title">Host property</h2>
-                        <p class="list-item--subtitle"><span class="list-item--hostname">Host name</span> &middot; <span class="list-item--reviews">#</span> reviews &middot; <span class="list-item--stars"><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star_half</i><i class="material-icons star">star_border</i></span></p>
+                        <h2 class="list-item--title" data-toggle="tooltip" data-placement="top" title="{{ listing.property_id.name }}"><a  href={{ listing.property_id.url }}><!--{{ listing.property_id.name }}-->Property 01</a></h2>
+                        <p class="list-item--subtitle"><span class="list-item--hostname"><a  href={{ listing.property_id.host_url }}><!--{{ listing.property_id.host_name }}-->Owner 01</a></span> &middot; <span class="list-item--reviews"><!--{{ listing.property_id.number_of_reviews }}-->reviews</span> reviews &middot; <span class="list-item--stars"><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star_half</i><i class="material-icons star">star_border</i></span></p>
                         <div class="list-item--price">
                             <p class="price-copy">Original price</p>
-                            <p class="original-price"><span class="price">60</span><sup class="dollar-sign">$</sup></p>
+                            <p class="original-price"><span class="price"><!--{{ listing.property_id.price }}-->60</span><sup class="dollar-sign">$</sup></p>
                         </div>
                         <div class="list-item--discount">
-                            <p class="price-copy">Might accept up to</p>
-                            <p class="discount-price"><span class="discount">10</span>%</p>
+                            <p class="discount-price--title">Discount</p>
+                            <div class="discount-price--box discount-likely">
+                                <p class="discount-price--label">likely</p>
+                                <p class="discount-price"><span class="likely-price">5</span>%</p>
+                            </div>
+                            <div class="discount-price--box discount-maybe">
+                                <p class="discount-price--label">maybe</p>
+                                <p class="discount-price"><span class="maybe-price">8</span>%</p>
+                            </div>
+                            <div class="discount-price--box discount-hardly">
+                                <p class="discount-price--label">hardly</p>
+                                <p class="discount-price"><span class="hardly-price">15</span>%</p>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <!--{% endfor %}-->
             </div>
         </div>
     </main>
