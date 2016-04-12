@@ -459,38 +459,6 @@ select.form-control {
     margin-bottom: 0;
 }
 
-.list-item--price {
-    float: left;
-    margin-top: 40px;
-    text-align: right;
-    width: 78px;
-}
-
-.original-price {
-    font-size: 2em;
-    font-weight: 800;
-}
-
-.list-item--discount {
-    color: #ff5252;
-    float: right;
-    font-size: 1.1em;
-    font-weight: 800;
-    letter-spacing: 0.3px;
-    margin-top: 28px;
-    margin-right: 50px;
-    width: 92px;
-}
-
-.discount-price {
-    color: #ff5252;
-    font-size: 3em;
-    font-weight: 800;
-    left: 50px;
-    position: relative;
-    top: -29px;
-}
-
 .tile-type01 .list-item--price, 
 .tile-type02 .list-item--price {
     float: left;
@@ -547,6 +515,15 @@ select.form-control {
     width: 33%;
 }
 
+.discount-price {
+    color: #ff5252;
+    font-size: 3em;
+    font-weight: 800;
+    left: 50px;
+    position: relative;
+    top: -29px;
+}
+
 .tile-type02 .discount-price {
     color: #ff5252;
     font-size: 2.4em;
@@ -586,14 +563,12 @@ footer {
         height: 250px;
         position: relative;
     }
+    .price-copy {
+        
+    }
     .list-item--price {
         float: none;
         text-align: left;
-    }
-    .list-item--discount {
-        bottom: -35px;
-        right: 16px;
-        position: absolute;
     }
     .tile-type01 .original-price, 
     .tile-type02 .original-price {
@@ -776,25 +751,13 @@ footer {
     .price-copy {
         font-size: 1em;
     }
-    .list-item--price {
-        margin-top: 30px;
-        width: 86px;
-    }
-    .original-price {
-        font-size: 2.2em;
-    }
-    .list-item--discount {
-        font-size: 1.2em;
-        margin-top: 10px;
-        width: 112px;
-    }
-    .discount-price {
-        left: 64px;
-    }
     .tile-type01 .list-item--price,
     .tile-type02 .list-item--price {
         margin-top: 16px;
         width: 86px;
+    }
+    .original-price {
+        font-size: 2.2em;
     }
     .tile-type01 .list-item--discount {
         font-size: 1.6em;
@@ -808,6 +771,9 @@ footer {
     .tile-type02 .discount-price--title {
         font-size: 1em;
         padding-left: 12px;
+    }
+    .discount-price {
+        left: 64px;
     }
     .tile-type02 .discount-price {
         font-size: 2.2em;
@@ -856,6 +822,7 @@ footer {
         width: 40%;
     }
     .filters-map {
+        background-color: aquamarine;
         height: 340px;
     }
     .listings {
