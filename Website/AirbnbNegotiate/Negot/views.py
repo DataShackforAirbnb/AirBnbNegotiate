@@ -4,7 +4,7 @@ from .models import Search, User, Availability, Listing
 from django.core.urlresolvers import reverse
 import datetime
 
-
+discount_threshold = 0.8
 def index(request):
     return render(request, 'Negot/index.html')
 
@@ -26,7 +26,8 @@ def search(request):
         search.destination = destination
 
         results = Availability.objects.filter(start_date = checkin_date, end_date = checkout_date)
-        print [i.property_id.picture_url for i in results]
+
+        # Apply discount threshold
     except (KeyError, Search.DoesNotExist):
         # Redisplay the index form with error Infomation.
         return render(request, 'Negot/index.html')

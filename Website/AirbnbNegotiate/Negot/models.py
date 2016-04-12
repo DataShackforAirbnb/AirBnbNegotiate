@@ -51,6 +51,7 @@ class Availability(models.Model):
     property_id = models.ForeignKey(Listing, on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField()
+    avg_price = models.FloatField(max_length=50)
 
     def __str__(self):
         return str(self.start_date) + ' ' + str(self.end_date)
