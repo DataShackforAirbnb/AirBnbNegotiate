@@ -428,7 +428,6 @@ select.form-control {
 }
 
 .list-item--pic {
-    background-color: aquamarine;
     float: left;
     height: 100%;
     margin-right: 20px;
@@ -459,6 +458,10 @@ select.form-control {
     margin-bottom: 0;
 }
 
+.dollar-sign {
+    font-size: 0.6em;
+}
+
 .tile-type01 .list-item--price, 
 .tile-type02 .list-item--price {
     float: left;
@@ -474,17 +477,29 @@ select.form-control {
     margin-top: 10px;
 }
 
+.tile-type01 .original-price {
+    color: #b6b6b6;
+}
+
+.tile-type01 .price {
+    text-decoration: line-through;
+}
+
 .tile-type01 .list-item--discount {
     color: #ffa000;
     float: right;
-    font-size: 2.2em;
+    font-size: 2em;
     font-weight: 800;
     letter-spacing: 0.3px;
     line-height: 1.2;
-    margin-top: 22px;
+    margin-top: 25px;
     margin-right: 0;
     text-align: right;
-    width: 220px;
+    width: 155px;
+}
+
+.deal-price {
+    font-size: 1.2em;
 }
 
 .tile-type02 .list-item--discount {
@@ -566,7 +581,8 @@ footer {
     .price-copy {
         
     }
-    .list-item--price {
+    .tile-type01 .list-item--price, 
+    .tile-type02 .list-item--price {
         float: none;
         text-align: left;
     }
@@ -576,8 +592,8 @@ footer {
         margin-top: 4px;
     }
     .tile-type01 .list-item--discount {
-        bottom: 12px;
-        font-size: 1.8em;
+        bottom: -5px;
+        font-size: 1.6em;
         right: 16px;
         position: absolute;
     }
@@ -733,7 +749,6 @@ footer {
         width: 160px;
     }
     .list-item--pic {
-        background-color: aquamarine;
         float: left;
         height: 100%;
         margin-right: 20px;
@@ -761,8 +776,11 @@ footer {
     }
     .tile-type01 .list-item--discount {
         font-size: 1.6em;
-        margin-top: 30px;
-        width: 178px;
+        margin-top: 25px;
+        width: 140px;
+    }
+    .deal-price {
+        font-size: 1.4em;
     }
     .tile-type02 .list-item--discount {
         margin-top: 16px;
@@ -822,7 +840,6 @@ footer {
         width: 40%;
     }
     .filters-map {
-        background-color: aquamarine;
         height: 340px;
     }
     .listings {
