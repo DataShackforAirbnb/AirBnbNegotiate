@@ -12,6 +12,14 @@
     <link href='https://fonts.googleapis.com/css?family=Raleway:400,600,800' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    {% if errors %}
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $("#auth").modal('show');
+    });
+    </script>
+    {% endif %}
 </head>
 
 <body>
@@ -33,18 +41,22 @@
                     <div class="modal-secondblock">
                         <h4 class="modal-copy"><span class="or">or</span></h4>
                         <h4 class="modal-copy">Use or Negot.io account:</h4>
-                        <form role="form" action="">
+                        {% if errors %}
+                        <p>{{ errors }}</p>
+                        {% endif %}
+                        <form role="form" action="{% url 'auth_view' %}" method="post">
+                            {% csrf_token %}
                             <div class="form-group">
-                                <input type="text" name="username" class="form-control" placeholder="Email">
+                                <input id="username" type="text" name="username" class="form-control" placeholder="Email">
                             </div>
                             <div class="form-group">
-                                <input type="password" name="psw" class="form-control" placeholder="Password">
+                                <input id="password" type="password" name="password" class="form-control" placeholder="Password">
                             </div>
                             <div class="checkbox">
-                                <label><input type="checkbox" value="" checked><span class="remember-me">Remember me</span></label>
+                                <label><input id='rememberme' type="checkbox" value="" checked><span class="remember-me">Remember me</span></label>
                             </div>
-                            <button type="submit" value="submit" class="btn btn-default btn-success btn-block search-btn login-btn">Login</button>
-                            <button type="submit" value="submit" class="btn btn-default btn-success btn-block search-btn signup-btn">Sign Up</button>
+                            <button id="login" type="submit" value="submit" class="btn btn-default btn-success btn-block search-btn login-btn">Login</button>
+                            <button id="signup" type="submit" value="submit" class="btn btn-default btn-success btn-block search-btn signup-btn">Sign Up</button>
                         </form>
                     </div>
                 </div>
@@ -68,7 +80,11 @@
             <div class="collapse navbar-collapse" id="Menu">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a class="menu-link" href="about">About</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a class="navbar-signin menu-link" data-toggle="modal" href= "{% url 'logout' %}">Hello, {{ user.username }}!</a></li>
+                    {% else %}
                     <li><a class="navbar-signin menu-link" data-toggle="modal" href="#auth">Sign in</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
