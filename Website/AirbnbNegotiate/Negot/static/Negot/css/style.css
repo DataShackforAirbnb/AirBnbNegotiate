@@ -303,6 +303,9 @@ select.form-control {
     cursor: pointer;
     text-decoration: underline;
 }
+.signup-psw {
+    display: none;
+}
 
 /* RESULT PAGE */
 

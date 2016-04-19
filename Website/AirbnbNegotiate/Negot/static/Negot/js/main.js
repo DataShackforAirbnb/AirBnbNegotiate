@@ -50,6 +50,7 @@ $(document).ready(function () {
     $('.signup').click(function(){
         $('.login-btn').toggle();
         $('.signup-btn').toggle();
+        $('.signup-psw').toggle();
         $('.checkbox').toggleClass('hidden-check');
         if($(this).hasClass('yes')){
             $('.member').text('Not a member?');
