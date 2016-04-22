@@ -502,88 +502,11 @@
                 </div>
             </div>
             <div class="clearfix"></div>
-            <div class="listings-list">
-                {% for listing in listings %}
 
-                <!--<script type='text/javascript'>-->
-                    <!--console.log({{ discount_threshold }})-->
-                    <!--console.log({{ listing.avg_price }})-->
-                    <!--console.log({{ discount_threshold }} >= {{ listing.avg_price }})-->
-                <!--</script>-->
-                {% if listing.property_id.price >= listing.avg_price %}
-                <div class="listing-list--item tile-type01">
-                    <div class="list-item--pic">
-                        <img class="list-item--img" src= "{{ listing.property_id.picture_url }}" style="width:150px;height:150px;" />
-                    </div>
-                    <div class="list-item--copy">
-                        <h2 class="list-item--title" data-toggle="tooltip" data-placement="top" title="{{ listing.property_id.name }}"><a  href={{ listing.property_id.url }}> {{ listing.property_id.name }} </a></h2>
-                        <p class="list-item--subtitle"><span class="list-item--hostname"><a  href={{ listing.property_id.host_url }}>{{ listing.property_id.host_name }}</a></span> &middot; <span class="list-item--reviews">{{ listing.property_id.number_of_reviews }}</span> reviews &middot; <span class="list-item--stars"><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star_half</i><i class="material-icons star">star_border</i></span></p>
-                        <div class="list-item--price">
-                            <p class="price-copy">Original price</p>
-                            <p class="original-price"><span class="price">{{ listing.property_id.price }}</span><sup class="dollar-sign">$</sup></p>
-                        </div>
-                        <div class="list-item--discount">
-                            <p class="price-copy">Great deal!!</p>
-                            <p class="deal-price"><span class="deal">60</span><sup class="dollar-sign">$</sup></p>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-
-                <!--{% widthratio listing.property_id.price 100 80 as discount_threshold %}-->
-                {% if listing.property_id.price <= listing.avg_price %}
-                <div class="listing-list--item tile-type02">
-                    <div class="list-item--pic">
-                        <img class="list-item--img" src= "{{ listing.property_id.picture_url }}" style="width:150px;height:150px;" />
-                    </div>
-                    <div class="list-item--copy">
-                        <h2 class="list-item--title" data-toggle="tooltip" data-placement="top" title="{{ listing.property_id.name }}"><a  href={{ listing.property_id.url }}>{{ listing.property_id.name }}</a></h2>
-                        <p class="list-item--subtitle"><span class="list-item--hostname"><a  href={{ listing.property_id.host_url }}>{{ listing.property_id.host_name }}</a></span> &middot; <span class="list-item--reviews">{{ listing.property_id.number_of_reviews }}</span> reviews &middot; <span class="list-item--stars"><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star_half</i><i class="material-icons star">star_border</i></span></p>
-                        <div class="list-item--price">
-                            <p class="price-copy">Original price</p>
-                            <p class="original-price"><span class="price">{{ listing.property_id.price }}</span><sup class="dollar-sign">$</sup></p>
-                        </div>
-                        <div class="list-item--discount">
-                            <p class="discount-price--title">Discount</p>
-                            <div class="discount-price--box discount-likely">
-                                <p class="discount-price--label">likely</p>
-                                <p class="discount-price"><span class="likely-price">5</span><sup class="dollar-sign">$</sup></p>
-                            </div>
-                            <div class="discount-price--box discount-maybe">
-                                <p class="discount-price--label">maybe</p>
-                                <p class="discount-price"><span class="maybe-price">8</span><sup class="dollar-sign">$</sup></p>
-                            </div>
-                            <div class="discount-price--box discount-hardly">
-                                <p class="discount-price--label">hardly</p>
-                                <p class="discount-price"><span class="hardly-price">15</span><sup class="dollar-sign">$</sup></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-
-                <!--&lt;!&ndash;{% widthratio listing.property_id.price 100 80 as discount_threshold %}&ndash;&gt;-->
-                <!--{% if listing.avg_price < listing.property_id.price %}-->
-                <!--<div class="listing-list&#45;&#45;item tile-type01">-->
-                    <!--<div class="list-item&#45;&#45;pic">-->
-                        <!--<img class="list-item&#45;&#45;img" src= "{{ listing.property_id.picture_url }}" style="width:150px;height:150px;" />-->
-                    <!--</div>-->
-                    <!--<div class="list-item&#45;&#45;copy">-->
-                        <!--<h2 class="list-item&#45;&#45;title" data-toggle="tooltip" data-placement="top" title="{{ listing.property_id.name }}"><a  href={{ listing.property_id.url }}> {{ listing.property_id.name }} </a></h2>-->
-                        <!--<p class="list-item&#45;&#45;subtitle"><span class="list-item&#45;&#45;hostname"><a  href={{ listing.property_id.host_url }}>{{ listing.property_id.host_name }}</a></span> &middot; <span class="list-item&#45;&#45;reviews">{{ listing.property_id.number_of_reviews }}</span> reviews &middot; <span class="list-item&#45;&#45;stars"><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star</i><i class="material-icons star">star_half</i><i class="material-icons star">star_border</i></span></p>-->
-                        <!--<div class="list-item&#45;&#45;price">-->
-                            <!--<p class="price-copy">Original price</p>-->
-                            <!--<p class="original-price"><span class="price">{{ listing.property_id.price }}</span><sup class="dollar-sign">$</sup></p>-->
-                        <!--</div>-->
-                        <!--<div class="list-item&#45;&#45;discount">-->
-                            <!--<p class="price-copy">No discount but great deal!!</p>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--{% endif %}-->
-
-                {% endfor %}
+            <div class="listings-list" id= "listings-list">
+                {% include 'Negot/result_list.html' with listings=listings %}
             </div>
+
         </div>
     </main>
     

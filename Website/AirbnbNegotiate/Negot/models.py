@@ -33,6 +33,7 @@ class Listing(models.Model):
     airBnbId = models.IntegerField(primary_key = True)
     url = models.URLField(max_length=254)
     name = models.CharField(max_length=254)
+    neighbourhood= models.CharField(max_length=254)
     picture_url = models.URLField(max_length=254)
     host_url = models.URLField(max_length=254)
     host_name = models.CharField(max_length=254)

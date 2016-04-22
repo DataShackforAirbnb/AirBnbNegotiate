@@ -44,6 +44,7 @@ $(document).ready(function () {
     $(".price-range").on("slideStop", function(slideEvt) {
         $(".low-value").text(slideEvt.value[0]);
         $(".high-value").text(slideEvt.value[1]);
+        retrieve();
     });
     
     // Modal
@@ -62,5 +63,40 @@ $(document).ready(function () {
             $('.modal-secondblock form').attr('action','signup');
         }
     });
+    
+    // Filters
+    
+    $(".filters-section :checkbox").change(function(){    
+    retrieve(); 
+    });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     function retrieve(){
+    var filter_room = [];
+    var filter_location = [];    
+    $.each($(".filters-roomtype :checkbox"), function(index, elem) {
+        if($(elem).is(":checked"))
+        {
+            filter_room.push($(elem).val());
+        }
+                  
+    });
+    $.each($(".filters-location :checkbox"), function(index, elem) {
+        if($(elem).is(":checked"))
+        {
+            filter_location.push($(elem).val());
+        }                  
+    }); 
+    var lower_price= $(".low-value").text();
+    var upper_price = $(".high-value").text();
+    var date_in = $(".listings-header--checkin").text();
+    var date_out = $(".listings-header--checkout").text();    
+    alert(filter_location);
+    alert (upper_price); 
+    $.get('/Negot/filter_listings/', {filter_room: filter_room,filter_location: filter_location, 
+    lower_price: lower_price, upper_price:upper_price, date_in:date_in,date_out:date_out }, 
+    function(data){
+            alert(data); 
+            $('#listings-list').html(data);
+    });
+    }                                                                                                                                                                                                                                                                                                           
+
 
 });
