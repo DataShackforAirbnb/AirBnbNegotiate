@@ -45,7 +45,11 @@ def search(request):
         search.num_of_results = len(results)
         if request.user.is_authenticated():
             search.user = get_user(request)
-
+        #filter only the useful neighbourhoods
+        join_id= results.values_list('property_id', flat=True)
+        neighbourhoods = Listing.objects.filter(airBnbId__in = join_id).values_list('neighbourhood', flat=True)
+        neighbourhoods= list(set(neighbourhoods))
+        neighbourhoods= filter(lambda a: "nan" not in a, neighbourhoods)           
         # Apply discount threshold
     except (KeyError, Search.DoesNotExist):
         # Redisplay the index form with error Infomation.
@@ -55,7 +59,7 @@ def search(request):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return render(request, 'Negot/results.html', {'listings': results, 'checkin_date': checkin_date, 'checkout_date': checkout_date})
+        return render(request, 'Negot/results.html', {'listings': results,'neighbourhoods':neighbourhoods, 'checkin_date': checkin_date, 'checkout_date': checkout_date})
 
 def filter_listings(request):
     search = Search()
