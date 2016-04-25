@@ -47,7 +47,7 @@
                         <form role="form" action="{% url 'auth_view' %}" method="post">
                             {% csrf_token %}
                             <div class="form-group">
-                                <input id="username" type="text" name="username" class="form-control" placeholder="Email">
+                                <input id="email" type="text" name="email" class="form-control" placeholder="Email">
                             </div>
                             <div class="form-group">
                                 <input id="password" type="password" name="password" class="form-control" placeholder="Password">
@@ -84,7 +84,8 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li><a class="menu-link" href="about">About</a></li>
                     {% if user.is_authenticated %}
-                    <li><a class="navbar-signin menu-link" data-toggle="modal" href= "{% url 'logout' %}">Hello, {{ user.username }}!</a></li>
+                    <li><a class="menu-link" href="">Hello, {{ user.username }}!</a></li>
+                    <li><a class="menu-link" data-toggle="modal" href= "{% url 'logout' %}">logout </a></li>
                     {% else %}
                     <li><a class="navbar-signin menu-link" data-toggle="modal" href="#auth">Sign in</a></li>
                     {% endif %}

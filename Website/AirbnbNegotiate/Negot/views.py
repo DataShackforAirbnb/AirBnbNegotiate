@@ -1,15 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Search, User, Availability, Listing
+from .models import Search, Availability, Listing
 from django.core.urlresolvers import reverse
 import datetime
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user
 from django.contrib.auth.decorators import login_required
 import logging
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-
-
+from django.contrib.auth.models import User
 
 discount_threshold = 0.8
 
@@ -41,7 +40,11 @@ def search(request):
         search.checkin_date = checkin_date
         search.chechout_date = checkout_date
         search.destination = destination
+
         results = Availability.objects.filter(start_date = checkin_date, end_date = checkout_date)
+        search.num_of_results = len(results)
+        if request.user.is_authenticated():
+            search.user = get_user(request)
 
         # Apply discount threshold
     except (KeyError, Search.DoesNotExist):
@@ -81,8 +84,8 @@ def filter_listings(request):
 
 
 def auth_view(request):
-    email = request.POST.get('username', 'qing')
-    password = request.POST.get('password', 'tb314630')
+    email = request.POST.get('email', 'qing')
+    password = request.POST.get('password')
     user = authenticate(username = email, password = password)
 
     print 'email:', email, 'password:', password
@@ -102,3 +105,7 @@ def auth_view(request):
 def log_out(request):
     logout(request)
     return render(request, 'Negot/index.html', {})
+
+@login_required
+def track_click(request):
+    pass

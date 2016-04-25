@@ -1,15 +1,8 @@
 from __future__ import unicode_literals
-
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
-class User(models.Model):
-    email = models.EmailField(max_length=254)
-    password = models.CharField(max_length=20)
-    reg_date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.email
 
 class Search(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -21,8 +14,11 @@ class Search(models.Model):
     num_of_results = models.IntegerField(default=0)
 
     def __str__(self):
-        return 'Start: {} - End: {}'.format(self.checkin_date, self.chechout_date)
-
+        print 'username:',self.user.get_username()
+        if self.user.get_username():
+            return '{} {} {}'.format(self.user.get_username(), self.checkin_date, self.chechout_date)
+        else :
+            return 'Unknow Start: {} - End: {}'.format(self.checkin_date, self.chechout_date)
 class Listing(models.Model):
     ROOM_TYPE = (
         ('Entire home/apt', 'Entire home/apt'),

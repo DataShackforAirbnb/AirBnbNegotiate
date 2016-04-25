@@ -157,3 +157,8 @@ STATIC_URL = '/static/'
 
 USE_L10N=False
 
+#
+# #AUTHENTICATION USING EMAILS
+# AUTHENTICATION_BACKENDS = (
+#     'Negot.email-auth.EmailBackend',
+# )

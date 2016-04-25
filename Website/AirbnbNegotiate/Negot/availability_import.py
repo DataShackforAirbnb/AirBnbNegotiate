@@ -45,19 +45,19 @@ def import_availability(parsed_calendars):
 def main():
     #Read in raw files
     cal = pd.read_json('../../data/calendars/nyc_cal.json')
-    cal2 = pd.read_json('../../data/calendars/nyc_cal_2.json')
-    cal3 = pd.read_json('../../data/calendars/nyc_cal_3.json')
-    cal4 = pd.read_json('../../data/calendars/nyc_cal_4.json')
+    # cal2 = pd.read_json('../../data/calendars/nyc_cal_2.json')
+    # cal3 = pd.read_json('../../data/calendars/nyc_cal_3.json')
+    # cal4 = pd.read_json('../../data/calendars/nyc_cal_4.json')
 
     #Parse calendars
     parsed_calendars = {}
     for i in cal.keys():
         parsed_calendars[i] = parse_calendar(cal[i])
-    for i in cal2.keys():
-        parsed_calendars[i] = parse_calendar(cal2[i])
-    for i in cal3.keys():
-        parsed_calendars[i] = parse_calendar(cal3[i])
-    for i in cal4.keys():
-        parsed_calendars[i] = parse_calendar(cal4[i])
+    # for i in cal2.keys():
+    #     parsed_calendars[i] = parse_calendar(cal2[i])
+    # for i in cal3.keys():
+    #     parsed_calendars[i] = parse_calendar(cal3[i])
+    # for i in cal4.keys():
+    #     parsed_calendars[i] = parse_calendar(cal4[i])
 
     import_availability(parsed_calendars)
