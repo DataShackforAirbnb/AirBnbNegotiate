@@ -82,7 +82,6 @@ def filter_listings(request):
         listings = listings.filter(property_id__room_type__in = filter_room)
     if len(filter_location)>0:
         listings = listings.filter(property_id__neighbourhood__in = filter_location)        
-    print listings    
     search.save()    
     return render_to_response('Negot/result_list.html', {'listings': listings }, context)
 
@@ -109,7 +108,6 @@ def filter_maps(request):
         listings = listings.filter(property_id__room_type__in = filter_room)
     if len(filter_location)>0:
         listings = listings.filter(property_id__neighbourhood__in = filter_location)        
-    print listings    
     search.save()    
     return render_to_response('Negot/map.html', {'listings': listings }, context)
 

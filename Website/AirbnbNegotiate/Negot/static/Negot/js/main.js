@@ -115,7 +115,7 @@ var myOptions = {
     mapTypeId: google.maps.MapTypeId.ROADMAP};
 var map = new google.maps.Map(document.getElementById('gmap_canvas'), myOptions);
 var infowindow = new google.maps.InfoWindow(), marker, i;
-for (i = 0; i < markers.length; i++) {
+for (i = 0; i < markers.length; i++) { 
     console.log(markers[i]);
     marker = new google.maps.Marker({
         position: new google.maps.LatLng(markers[i][1], markers[i][2]),

@@ -141,18 +141,12 @@
                     <div class="row filters-row">
                         <div class="col-sm-12 filters-label"><p>Neighborhoods</p></div>
                         <div class="col-sm-11">   
+                            {% for nbh in neighbourhoods|slice:"3" %}
                             <div class="filters-radio col-sm-4">
                                 <input type="checkbox" value="Manhattan" name="neighborhood">
-                                <span>Manhattan</span>
+                                <span>{{nbh}}</span>
                             </div>
-                            <div class="filters-radio col-sm-4">
-                                <input type="checkbox" value="Brooklyn" name="neighborhood">
-                                <span>Brooklyn</span>
-                            </div>
-                            <div class="filters-radio col-sm-4">
-                                <input type="checkbox" value="Midtown" name="neighborhood">
-                                <span>Midtown</span>
-                            </div>
+                            {% endfor %}
                         </div>
                         <div class="col-sm-1 filters-dropdown hidden-xs"><p><i class="material-icons">arrow_drop_down</i></p></div>
                         <div class="col-sm-1 filters-dropdown hidden-sm hidden-md hidden-lg"><p class="other">Other</p></div>
@@ -161,12 +155,15 @@
                 <div class="filters-section filters-location filters-more">
                     <div class="row filters-row">
                         <div class="col-sm-11">   
-                            {% for nbh in neighbourhoods %}  
+                            {% for nbh in neighbourhoods %} 
+                            {% if forloop.counter  > 3 %}
                             <div class="filters-radio col-sm-4">
                                 <input type="checkbox" value= "{{nbh}}" name="neighborhood">
                                 <span>{{nbh}}</span>
                             </div>
+                            {% endif %}
                             {% endfor %}  
+                            
                             
                             
                         </div>
