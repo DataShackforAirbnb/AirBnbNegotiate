@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^auth_view', views.auth_view, name = 'auth_view'),
     url(r'^logout', views.log_out, name = 'logout'),
     url(r'^filter_listings/$', views.filter_listings, name='filter_listings'),
+    url(r'^filter_maps/$', views.filter_maps, name='filter_maps'),
  
 ]

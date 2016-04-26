@@ -86,6 +86,32 @@ def filter_listings(request):
     search.save()    
     return render_to_response('Negot/result_list.html', {'listings': listings }, context)
 
+#this function is almost identical to filter_listings, but due to url mapping is difficult to merge into a single one
+#TODO find a more elegant and DRY solution
+def filter_maps(request):
+    search = Search()
+    context = RequestContext(request)
+    if request.method == 'GET':
+        filter_room = request.GET.getlist('filter_room[]' )
+        filter_location = request.GET.getlist('filter_location[]' )        
+        lower_price= request.GET.get('lower_price' )
+        upper_price= request.GET.get('upper_price' )
+    listings = []    
+    destination = ('New York NY, United States')
+    checkin_date = datetime.datetime.strptime(request.GET['date_in'], '%Y-%m-%d').strftime('%Y-%m-%d')
+    checkout_date =datetime.datetime.strptime(request.GET['date_out'], '%Y-%m-%d').strftime('%Y-%m-%d')
+    search.checkin_date = checkin_date
+    search.chechout_date = checkout_date
+    search.destination = destination
+    listings = Availability.objects.filter(start_date = checkin_date, end_date = checkout_date, 
+    avg_price__lte=upper_price,avg_price__gte=lower_price)    
+    if len(filter_room)>0:
+        listings = listings.filter(property_id__room_type__in = filter_room)
+    if len(filter_location)>0:
+        listings = listings.filter(property_id__neighbourhood__in = filter_location)        
+    print listings    
+    search.save()    
+    return render_to_response('Negot/map.html', {'listings': listings }, context)
 
 def auth_view(request):
     email = request.POST.get('email', 'qing')
