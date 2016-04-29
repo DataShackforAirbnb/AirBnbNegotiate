@@ -68,8 +68,8 @@ $(document).ready(function () {
     
     // Filters
     
-    $(".filters-section :checkbox").change(function(){    
-    retrieve(); 
+    $(".filters-section :checkbox").click(function(){    
+    retrieve();     
     });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     function retrieve(){
     var filter_room = [];
     var filter_location = [];    
@@ -90,44 +90,31 @@ $(document).ready(function () {
     var upper_price = $(".high-value").text();
     var date_in = $(".listings-header--checkin").text();
     var date_out = $(".listings-header--checkout").text();    
-    $.get('/Negot/filter_listings/', {filter_room: filter_room,filter_location: filter_location, 
-    lower_price: lower_price, upper_price:upper_price, date_in:date_in,date_out:date_out }, 
-    function(data){
-            $('#listings-list').html(data);
-    });
     $.get('/Negot/filter_maps/', {filter_room: filter_room,filter_location: filter_location, 
     lower_price: lower_price, upper_price:upper_price, date_in:date_in,date_out:date_out }, 
     function(data){
              $('#g_map').html(data);
     });
     
+    $.get('/Negot/filter_listings/', {filter_room: filter_room,filter_location: filter_location, 
+    lower_price: lower_price, upper_price:upper_price, date_in:date_in,date_out:date_out }, 
+    function(data){
+            $('#listings-list').html(data);
+    });
     
-    }                                                                                                                                                                                                                                                                                                           
+    
+    
+   
+    
+    }
+                                                                                                                                                                                                                                                                                                       
 
+            
+        
 
 });
 
-//Map
-function init_map(){
-var myOptions = {
-    zoom:11,
-    center:new google.maps.LatLng(40.71278370000001,-74.00594130000003),
-    mapTypeId: google.maps.MapTypeId.ROADMAP};
-var map = new google.maps.Map(document.getElementById('gmap_canvas'), myOptions);
-var infowindow = new google.maps.InfoWindow(), marker, i;
-for (i = 0; i < markers.length; i++) { 
-    console.log(markers[i]);
-    marker = new google.maps.Marker({
-        position: new google.maps.LatLng(markers[i][1], markers[i][2]),
-        map: map
-    });
-    google.maps.event.addListener(marker, 'click', (function(marker, i){
-        return function() {
-            infowindow.setContent(markers[i][0]);
-            infowindow.open(map, marker);
-        }
-    })(marker, i));
-    infowindow.open(map,marker);
-    }   
-}
+
+
+
 
