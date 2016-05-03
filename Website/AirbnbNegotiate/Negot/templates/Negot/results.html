@@ -99,7 +99,7 @@
 
         <div class="filters hidden-xs" id="filters">
             <div class="g_map" id ="g_map">
-            {% include 'Negot/map.html' with listings=listings %}
+            {% include 'Negot/map.html' with listings=results %}
             </div>
             
             <div class="filters-copy">
@@ -186,7 +186,7 @@
             <div class="clearfix"></div>
 
             <div class="listings-list" id= "listings-list">
-                {% include 'Negot/result_list.html' with listings=listings %}
+                {% include 'Negot/result_list.html' with listings=results %}
             </div>
 
         </div>

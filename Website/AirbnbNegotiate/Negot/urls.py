@@ -1,7 +1,7 @@
 from django.conf.urls import url
-
+import os
 from . import views
-
+from django.conf import settings
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^about/', views.about, name = 'about'),
@@ -11,5 +11,4 @@ urlpatterns = [
     url(r'^logout', views.log_out, name = 'logout'),
     url(r'^filter_listings/$', views.filter_listings, name='filter_listings'),
     url(r'^filter_maps/$', views.filter_maps, name='filter_maps'),
- 
 ]

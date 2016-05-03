@@ -17,7 +17,7 @@ random.shuffle(ids)
 calendars = dict()
 # failed_ids = pd.read_json('calendars/failed_ids.json')
 
-def getCalendar(ids, months, output_file = '../data/calendars/nyc_cal_4.json', logfile = '../data/calendars/failed_ids_4.json'):
+def getCalendar(ids, months, output_file = '../data/calendars/nyc_cal_may.json', logfile = '../data/calendars/failed_ids_may.json'):
     counter = 1
     lost_ids = []
     for s in ids:
