@@ -74,3 +74,6 @@ data/listings
 
 #pycharm logs
 .idea/
+
+#machine learning model
+*.pkl
