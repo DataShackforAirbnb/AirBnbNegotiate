@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Negot.io | Results</title>
+    <title>AirNegot.io | Results</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -32,14 +32,16 @@
                     </div>
                     <div class="modal-secondblock">
                         <h4 class="modal-copy"><span class="or">or</span></h4>
-                        <h4 class="modal-copy">Use or Negot.io account:</h4>
-                        {% if errors %}
-                        <p>{{ errors }}</p>
-                        {% endif %}
-                        <form role="form" action="{% url 'auth_view' %}" method="post">
+                        <h4 class="modal-copy">Use AirNegot.io account:</h4>
+
+                        <form role="form" action="{% url 'login' %}" method="post" class="login-form">
                             {% csrf_token %}
+
+                            {% if info %}
+                            <p>{{ info }}</p>
+                            {% endif %}
                             <div class="form-group">
-                                <input id="username" type="text" name="username" class="form-control" placeholder="Email">
+                                <input id="email" type="text" name="email" class="form-control" placeholder="Username">
                             </div>
                             <div class="form-group">
                                 <input id="password" type="password" name="password" class="form-control" placeholder="Password">
@@ -51,6 +53,21 @@
                                 <label><input id='rememberme' type="checkbox" value="" checked><span class="remember-me">Remember me</span></label>
                             </div>
                             <button id="login" type="submit" value="submit" class="btn btn-default btn-success btn-block search-btn login-btn">Login</button>
+                            <!--<button id="signup" type="submit" value="submit" class="btn btn-default btn-success btn-block search-btn signup-btn">Sign Up</button>-->
+
+                        </form>
+
+                        <form role="form" action="{% url 'register' %}" method="post" class="signup-form " style="display: none;">
+                            {% csrf_token %}
+                            {% for field in args.form %}
+                                <div class="form-group">
+                                    {{ field.errors }}
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                    <p class="help">{{ field.help_text|safe }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
                             <button id="signup" type="submit" value="submit" class="btn btn-default btn-success btn-block search-btn signup-btn">Sign Up</button>
                         </form>
                     </div>
@@ -62,7 +79,12 @@
             </div>
         </div>
     </div>
-    
+
+    <!-- OVERLAY for filters -->
+    <div class="loading-filters">
+        <div class="loading-loader"></div>
+    </div>
+
     <!-- NAVBAR -->
     <nav class="navbar" role="navigation">
         <div class="container">
@@ -70,7 +92,7 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#Menu">
                     <i class="material-icons menu-btn">menu</i>
                 </button>
-                <a class="navbar-brand" href="{% url 'index'%}">Negot.io</a>
+                <a class="navbar-brand" href="{% url 'index'%}">AirNegot.io</a>
             </div>
             <div class="collapse navbar-collapse" id="Menu">
                 <ul class="nav navbar-nav navbar-right">
@@ -93,9 +115,6 @@
                 <span class="filters-btn--text">Filters</span>
             </button>
         </div>
-                   
-               
-            
 
         <div class="filters hidden-xs" id="filters">
             <div class="g_map" id ="g_map">
@@ -163,9 +182,9 @@
                             </div>
                             {% endif %}
                             {% endfor %}  
-                            
-                            
-                            
+
+
+
                         </div>
                     </div>
 
@@ -184,12 +203,19 @@
                 </div>
             </div>
             <div class="clearfix"></div>
-
+            {% if user.is_authenticated %}
             <div class="listings-list" id= "listings-list">
-                {% include 'Negot/result_list.html' with listings=results %}
+                {% include 'Negot/result_list.html' with results=results %}
             </div>
+            {% else %}
+                {% include 'Negot/result_list.html' with results=part_results %}
+                <div class="listings-message">
+                    <p class="listings-message--copy"><a data-toggle="modal" href="#auth">Sign in</a> to see more deals!</p>
+                </div>
+            {% endif %}
 
         </div>
+
     </main>
     
     <!-- FOOTER -->

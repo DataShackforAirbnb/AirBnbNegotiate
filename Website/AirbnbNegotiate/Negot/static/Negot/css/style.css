@@ -3,6 +3,7 @@
 body {
     color: #212121;
     font-family: 'Raleway', sans-serif;
+    position: relative;
 }
 
 a,
@@ -25,6 +26,15 @@ strong {
 
 .red {
     color: #ff5252;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 
@@ -58,6 +68,7 @@ strong {
 
 
 /* CONTENT */
+
 
 /* hero image */
 
@@ -184,6 +195,7 @@ input[name="location"]::-ms-placeholder {
     background-color: #ff5252;
     border: none;
 }
+
 select.form-control {
     -webkit-appearance: none;
     cursor: pointer;
@@ -236,76 +248,94 @@ select.form-control {
     position: relative;
 }
 
+
 /* Modal */
 
 .modal-header {
     border: none;
     padding: 10px 15px 0;
 }
+
 .modal-body .form-control {
     padding-left: 14px;
 }
+
 .modal-copy {
     margin-bottom: 25px;
     text-align: center;
 }
+
 .modal-firstblock {
     border-bottom: 1px solid #ffa000;
     padding-bottom: 30px;
 }
+
 .modal-secondblock {
     position: relative;
     top: -22px;
 }
+
 .btn-google {
     background-color: #fff;
-    border: 1px solid rgb(204,204,204);
+    border: 1px solid rgb(204, 204, 204);
     border-radius: 2px;
-    color: rgba(0,0,0,0.54);
+    color: rgba(0, 0, 0, 0.54);
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
 }
+
 .btn-google img {
     height: 90%;
     margin-right: 10px;
 }
+
 .btn-google:hover {
     background-color: #fff;
-    border: 1px solid rgb(204,204,204);
-    color: rgba(0,0,0,0.54);
+    border: 1px solid rgb(204, 204, 204);
+    color: rgba(0, 0, 0, 0.54);
 }
+
 .checkbox {
     opacity: 1;
     -webkit-transition: opacity 0.3s ease;
     transition: opacity 0.3s ease;
 }
+
 .remember-me {
     font-size: 0.85em;
 }
+
 .or {
     background-color: #fff;
     padding: 0 24px;
 }
+
 .btn-block + .btn-block {
     margin-top: 0;
 }
+
 .signup-btn {
     background-color: #ff5454;
     display: none;
 }
+
 .signup-btn:hover {
     background-color: #ffa000;
 }
+
 .hidden-check {
     opacity: 0;
 }
+
 .signup {
     cursor: pointer;
     text-decoration: underline;
 }
+
 .signup-psw {
     display: none;
 }
+
 
 /* RESULT PAGE */
 
@@ -325,6 +355,7 @@ select.form-control {
     width: 92%;
     z-index: 99;
 }
+
 .filters {
     border-bottom: 1px solid #b6b6b6;
     font-size: 0.9em;
@@ -361,6 +392,7 @@ select.form-control {
     display: none;
     padding-top: 20px;
 }
+
 .filters-more .filters-radio {
     margin-bottom: 5px;
 }
@@ -421,6 +453,45 @@ select.form-control {
     width: 100%;
 }
 
+.loading-filters {
+    background-color: rgba(255, 255, 255, 0.8);
+    display: none;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    z-index: 999;
+}
+
+.loading-loader {
+    animation: spin 1s infinite cubic-bezier(.4, 0, .6, 1);
+    border: 1rem solid rgba(255, 82, 82, 0.2);
+    border-radius: 50%;
+    border-top-color: #ff5252;
+    height: 80px;
+    left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -80px;
+    position: fixed;
+    right: 0;
+    top: 50%;
+    width: 80px;
+    z-index: 1000;
+}
+
+.listings-message {
+    margin: 40px 0;
+    text-align: center;
+}
+
+.listings-message--copy {
+    font-size: 1.4em;
+}
+
+.listings-message a {
+    color: #ffa000;
+}
+
 .listing-list--item {
     border: 2px solid #b6b6b6;
     border-radius: 2px;
@@ -459,13 +530,14 @@ select.form-control {
 .price-copy {
     font-size: 0.9em;
     margin-bottom: 0;
+    text-align: left;
 }
 
 .dollar-sign {
     font-size: 0.6em;
 }
 
-.tile-type01 .list-item--price, 
+.tile-type01 .list-item--price,
 .tile-type02 .list-item--price {
     float: left;
     margin-top: 22px;
@@ -473,7 +545,7 @@ select.form-control {
     width: 78px;
 }
 
-.tile-type01 .original-price, 
+.tile-type01 .original-price,
 .tile-type02 .original-price {
     font-size: 2.2em;
     font-weight: 800;
@@ -498,7 +570,7 @@ select.form-control {
     margin-top: 25px;
     margin-right: 0;
     text-align: right;
-    width: 155px;
+    width: 166px;
 }
 
 .deal-price {
@@ -508,18 +580,30 @@ select.form-control {
 .tile-type02 .list-item--discount {
     color: #ff5252;
     float: right;
-    font-size: 1em;
+    font-size: 2em;
     font-weight: 800;
     letter-spacing: 0.3px;
-    margin-top: 22px;
+    line-height: 1.2;
+    margin-top: 25px;
     margin-right: 0;
-    text-align: center;
-    width: 250px;
+    text-align: right;
+    width: 213px;
+}
+
+.recommend-text {
+    color: #212121;
+    float: left;
+    font-size: 0.45em;
+    font-weight: 400;
+    margin-top: 4px;
+    text-align: left;
+    width: 100px;
 }
 
 .tile-type02 .discount-price--label {
     margin-bottom: 0;
 }
+
 .tile-type02 .discount-price--title {
     color: #212121;
     font-size: 0.9em;
@@ -581,15 +665,12 @@ footer {
         height: 250px;
         position: relative;
     }
-    .price-copy {
-        
-    }
-    .tile-type01 .list-item--price, 
+    .tile-type01 .list-item--price,
     .tile-type02 .list-item--price {
         float: none;
         text-align: left;
     }
-    .tile-type01 .original-price, 
+    .tile-type01 .original-price,
     .tile-type02 .original-price {
         font-size: 1.8em;
         margin-top: 4px;
@@ -599,15 +680,22 @@ footer {
         font-size: 1.6em;
         right: 16px;
         position: absolute;
+        width: 134px;
     }
     .tile-type02 .list-item--discount {
-        margin-top: -68px;
-        width: 190px;
+        bottom: -5px;
+        font-size: 1.6em;
+        right: 16px;
+        position: absolute;
+        width: 172px;
     }
-    .tile-type02 .discount-price--label  {
+    .recommend-text {
+        font-size: 0.52em;
+    }
+    .tile-type02 .discount-price--label {
         font-size: 0.9em;
     }
-    .tile-type02 .discount-price--title  {
+    .tile-type02 .discount-price--title {
         margin-bottom: -2px;
     }
     .tile-type02 .discount-price {
@@ -780,14 +868,18 @@ footer {
     .tile-type01 .list-item--discount {
         font-size: 1.6em;
         margin-top: 25px;
-        width: 140px;
+        width: 148px;
     }
     .deal-price {
         font-size: 1.4em;
     }
     .tile-type02 .list-item--discount {
-        margin-top: 16px;
-        width: 230px;
+        font-size: 1.6em;
+        margin-top: 25px;
+        width: 190px;
+    }
+    .recommend-text {
+        font-size: 0.6em;
     }
     .tile-type02 .discount-price--title {
         font-size: 1em;

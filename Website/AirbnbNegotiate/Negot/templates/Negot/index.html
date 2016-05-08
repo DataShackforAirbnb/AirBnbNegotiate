@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Negot.io | Home</title>
+    <title>AirNegot.io | Home</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -13,13 +13,21 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-    {% if errors %}
+    {% if info %}
     <script type="text/javascript">
     $(document).ready(function(){
         $("#auth").modal('show');
     });
     </script>
     {% endif %}
+    <!--{% if login_info %}-->
+    <!---->
+    <!--<script type="text/javascript">-->
+    <!--$(document).ready(function(){-->
+        <!--$("#auth").modal('show');-->
+    <!--});-->
+    <!--</script>-->
+    <!--{% endif %}-->
 </head>
 
 <body>
@@ -40,14 +48,16 @@
                     </div>
                     <div class="modal-secondblock">
                         <h4 class="modal-copy"><span class="or">or</span></h4>
-                        <h4 class="modal-copy">Use or Negot.io account:</h4>
-                        {% if errors %}
-                        <p>{{ errors }}</p>
-                        {% endif %}
-                        <form role="form" action="{% url 'auth_view' %}" method="post">
+                        <h4 class="modal-copy">Use AirNegot.io account:</h4>
+
+                        <form role="form" action="{% url 'login' %}" method="post" class="login-form">
                             {% csrf_token %}
+
+                            {% if info %}
+                            <p>{{ info }}</p>
+                            {% endif %}
                             <div class="form-group">
-                                <input id="email" type="text" name="email" class="form-control" placeholder="Email">
+                                <input id="email" type="text" name="email" class="form-control" placeholder="Username">
                             </div>
                             <div class="form-group">
                                 <input id="password" type="password" name="password" class="form-control" placeholder="Password">
@@ -59,6 +69,20 @@
                                 <label><input id='rememberme' type="checkbox" value="" checked><span class="remember-me">Remember me</span></label>
                             </div>
                             <button id="login" type="submit" value="submit" class="btn btn-default btn-success btn-block search-btn login-btn">Login</button>
+                            <!--<button id="signup" type="submit" value="submit" class="btn btn-default btn-success btn-block search-btn signup-btn">Sign Up</button>-->
+                        </form>
+
+                        <form role="form" action="{% url 'register' %}" method="post" class="signup-form " style="display: none;">
+                            {% csrf_token %}
+                            {% for field in args.form %}
+                                <div class="form-group">
+                                    {{ field.errors }}
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                    <p class="help">{{ field.help_text|safe }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
                             <button id="signup" type="submit" value="submit" class="btn btn-default btn-success btn-block search-btn signup-btn">Sign Up</button>
                         </form>
                     </div>
@@ -78,7 +102,7 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#Menu">
                     <i class="material-icons menu-btn">menu</i>
                 </button>
-                <a class="navbar-brand" href="">Negot.io</a>
+                <a class="navbar-brand" href="">AirNegot.io</a>
             </div>
             <div class="collapse navbar-collapse" id="Menu">
                 <ul class="nav navbar-nav navbar-right">

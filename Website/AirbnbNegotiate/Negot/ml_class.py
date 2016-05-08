@@ -292,7 +292,6 @@ class Negot_Model(object):
         df_calendar["price_high"] = np.max(calendar_price, axis=1)
         df_calendar["price_std"] = np.std(calendar_price, axis=1)/df_calendar["price_median"]
 
-
         ### 1M OCCUPANCY
         key_1m = range(30)
         calendar_occupancy = [np.mean([calendar["availability"][key] for key in key_1m])
@@ -346,7 +345,6 @@ class Negot_Model(object):
                 day_list.append(day_parsed)
         return pd.DataFrame({'date':date, 'price_USD': price_USD, 'availability':availability, 'min_nights': min_nights})
     #################################################################################################################
-
 
     #################################################################################################################
     # 3. PREDICT: run once every day after new calendar being scraped

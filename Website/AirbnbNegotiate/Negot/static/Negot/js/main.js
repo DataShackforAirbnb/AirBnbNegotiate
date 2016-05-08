@@ -51,6 +51,9 @@ $(document).ready(function () {
     $('.signup').click(function(){
         $('.login-btn').toggle();
         $('.signup-btn').toggle();
+        $('.login-form').toggle();
+        $('.signup-form').toggle();
+
         $('.signup-psw').toggle();
         $('.checkbox').toggleClass('hidden-check');
         if($(this).hasClass('yes')){
@@ -58,9 +61,10 @@ $(document).ready(function () {
             $(this).text('Sign up').removeClass('yes');
             $('.modal-secondblock form').attr('action','login');
         } else {
+            $('.signup-form').show();
             $('.member').text('Already a member?');
             $(this).text('Login').addClass('yes');
-            $('.modal-secondblock form').attr('action','signup');
+            $('.modal-secondblock form').attr('action','register');
         }
     });
     
@@ -101,10 +105,6 @@ $(document).ready(function () {
     function(data){
             $('#listings-list').html(data);
     });
-    
-    
-    
-   
     
     }
                                                                                                                                                                                                                                                                                                        
