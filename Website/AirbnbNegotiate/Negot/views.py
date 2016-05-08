@@ -130,12 +130,23 @@ def auth_view(request):
             # Return a 'disabled account' error message
     else:
         # Return an 'invalid login' error message.
-        return render(request, 'Negot/index.html', {'info': 'Your username and password didn\'t match. Please try again.'})
+        args = {}
+        args.update(csrf(request))
+        form = RegistrationForm()
+        args['form'] = form
+
+        return render(request, 'Negot/index.html', {'info': 'Your username and password didn\'t match. Please try again.','args' : args})
 
 @login_required
 def log_out(request):
     logout(request)
-    return render(request, 'Negot/index.html')
+
+    args = {}
+    args.update(csrf(request))
+    form = RegistrationForm()
+    args['form'] = form
+    return render(request, 'Negot/index.html', {'args' : args})
+    # return render(request, 'Negot/index.html')
 
 @login_required
 def track_click(request):
