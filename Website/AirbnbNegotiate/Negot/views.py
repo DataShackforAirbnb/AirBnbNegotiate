@@ -35,6 +35,22 @@ def myfunction():
 def myotherfunction():
     logger.error("this is an error message!!")
 
+def convert_rating(listing):
+    rating = listing.review_scores_rating
+    output = [0,0,0,0,0]
+    rating = round(rating/20.0 * 2.0) / 2.0
+    if rating > 5 or rating <0:
+        listing.review_scores_rating = output
+        return listing
+
+    output[0:int(rating)] = [1]*int(rating)
+    if rating <5:
+        output[int(rating)] = rating-int(rating)
+
+    listing.review_scores_rating = output
+    print listing.review_scores_rating
+    return listing
+
 def index(request):
     args = {}
     args.update(csrf(request))
@@ -101,6 +117,10 @@ def search(request):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         listings = [i[0] for i in ml_result]
+
+        #convert listing review scores to a length-5 tuple: 3.5->(1,1,1,0.5,0)
+        listings = [convert_rating(i) for i in listings]
+
         orig_percent_off = [int(i[1][1] * 100) for i in ml_result]
         negot_proba = [int(i[1][2] * 100) for i in ml_result]
         discounted_price = [int((1-i[1][3]) * i[0].price) for i in ml_result]
