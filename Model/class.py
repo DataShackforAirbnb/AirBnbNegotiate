@@ -11,7 +11,7 @@ from sklearn.preprocessing import Imputer
 class Model(object):
 
     def __init__(self,
-                 input_dir="input",
+                 input_dir="input", 
                  intermediate_dir="intermediate",
                  output_dir="output",
                  calendar_date=dt.date.today().strftime("%Y%m%d"),
@@ -26,41 +26,64 @@ class Model(object):
         self.calendar_date = calendar_date
         self.calendar_date_parsed = dt.datetime.strptime(calendar_date, "%Y%m%d")
 
-    #################################################################################################################
-    # 1. TRAIN: run once, unless model/parameter changes.
-    #       Input: preprocessed training data (round1_merged.json, etc.)
-    #       Output: random forest models (clf_all_rf, clf_discount_rf)
+        # Imputer if NAN
+        self.imputer = Imputer(copy=True, missing_values='NaN', strategy='mean', axis=1)
+
     #################################################################################################################
     def Train(self):
         input_dir = self.input_dir
         intermediate_dir = self.intermediate_dir
         output_dir = self.output_dir
+        imputer = self.imputer
 
         # LOAD PREPROCESSED TRAINING DATA SILOS AND COMBINE THEM
+        round5 = pd.read_json("%s/round5_merged.json"%input_dir)
+        round4 = pd.read_json("%s/round4_merged.json"%input_dir)
         round3 = pd.read_json("%s/round3_merged.json"%input_dir)
         round2 = pd.read_json("%s/round2_merged.json"%input_dir)
         round1 = pd.read_json("%s/round1_merged.json"%input_dir)
+        sent_info = pd.read_json("%s/sent_info.json"%input_dir)
+        round5_clean = round5[["id", "host_id", "host_response_rate", "host_acceptance_rate",
+                               "host_total_listings_count", "instant_bookable",
+                               "room_type", "bucket_name", "discount_asked", "nightly_price",
+                               "decision", "price_agreed", "discount_agreed", "percent_agreed",
+                               "calendars", "price_requested", "beds", "number_of_reviews"]]
+        round4_clean = round4[["id", "host_id", "host_response_rate", "host_acceptance_rate",
+                               "host_total_listings_count", "instant_bookable",
+                               "room_type", "bucket_name", "discount_asked", "nightly_price",
+                               "decision", "price_agreed", "discount", "percent_agreed",
+                               "calendars", "price_requested", "beds", "number_of_reviews"]]
         round3_clean = round3[["id", "host_id", "host_response_rate", "host_acceptance_rate",
                                "host_total_listings_count", "instant_bookable",
                                "room_type", "bucket_name", "discount_asked", "nightly_price",
                                "decision", "price_agreed", "discount_agreed", "percent_agreed",
-                               "calendars", "price_requested"]]
+                               "calendars", "price_requested", "beds", "number_of_reviews"]]
         round2_clean = round2[["id", "host_id", "host_response_rate", "host_acceptance_rate",
                                "host_total_listings_count", "instant_bookable",
                                "room_type", "bucket_name", "discount_asked", "nightly_price",
                                "decision", "price_agreed", "discount_agreed", "percent_agreed",
-                               "calendars", "price_requested"]]
+                               "calendars", "price_requested", "beds", "number_of_reviews"]]
         round1_clean = round1[["id", "host_id", "host_response_rate", "host_acceptance_rate",
                                "host_total_listings_count", "instant_bookable",
                                "room_type", "bucket_name", "discount_asked", "nightly_price",
                                "availability", "price", "discount",
-                               "calendars", "price_requested"]]
+                               "calendars", "price_requested", "beds", "number_of_reviews"]]
+
         round1_clean = round1_clean.rename(columns = {"availability":"decision", "price":"price_agreed", "discount":"percent_agreed"})
-        round1_clean = round1_clean.rename(columns = {"availability":"decision", "price":"price_agreed", "discount":"percent_agreed"})
+        round4_clean = round4_clean.rename(columns = {"discount":"discount_agreed"})
+        round5_clean["decision"] = [1 if val==4 else val for val in round5_clean.decision.values]
+
         round1_clean["percent_agreed"] = [np.nan if val==None else float(val.strip("%"))/100. for val in  round1_clean.percent_agreed.values]
-        combined = pd.concat([round1_clean, round2_clean, round3_clean], keys=["round1", "round2", "round3"], ignore_index=False)
+
+        combined = pd.concat([round1_clean, round2_clean, round3_clean, round4_clean, round5_clean], keys=["round1", "round2", "round3", "round4", "round5"], ignore_index=False)
+
         combined["source"] = combined.index.labels[0]+1
         combined = combined.reset_index(drop=True)
+
+        sent_info = sent_info.rename(columns = {"property_id":"id"})
+        sent_info_clean = sent_info[['id', 'source', 'start', 'end', 'sent_date']]
+
+        combined = pd.merge(combined, sent_info_clean, on=['id', 'source'], how='inner')
 
         # CLEAN AND CONSTRUCT X VARIABLES (ESTIMATORS)
         ### PRICE RELATED
@@ -85,11 +108,16 @@ class Model(object):
         instant = combined["instant_bookable"].values
         combined["instant"] = [x=="t" for x in shared]
         ### RESPONSE RATE
-        response_imputer = Imputer(copy=True, missing_values='NaN', strategy='mean', axis=1)
+        imputer = Imputer(copy=True, missing_values='NaN', strategy='mean', axis=1)
         response_num = np.array([float(response_rate.strip('%'))/100 for response_rate in combined["host_response_rate"].fillna(value="-100%").values])
         response_num = np.array([np.nan if x < 0 else x for x in response_num])
-        response_imputed = response_imputer.fit_transform(response_num)[0]
+        response_imputed = imputer.fit_transform(response_num)[0]
         combined["response_rate"] = response_imputed
+        ### CALCULATE NUMERIC BUCKET
+        calc_len = lambda row: (dt.datetime.strptime(row["end"], '%Y-%m-%d') - dt.datetime.strptime(row["start"], '%Y-%m-%d')).days
+        calc_adv = lambda row: np.floor((dt.datetime.strptime(row["start"], '%Y-%m-%d') - dt.datetime.strptime(row["sent_date"], '%Y-%m-%d')).days/7)
+        combined["length_num"] = combined.apply(calc_len, axis=1)
+        combined["advance_num"] = combined.apply(calc_adv, axis=1)
         ### BUCKETS (LONG...)
         opening_attr = combined["bucket_name"].values
         N = len(opening_attr)
@@ -98,84 +126,50 @@ class Model(object):
         orp_3 = np.zeros(N)
         adv_1 = np.zeros(N)
         adv_2 = np.zeros(N)
+
+        orphan = np.ones(N)
+
         for (i,x) in enumerate(opening_attr):
             if x == "days1_weeks1":
                 orp_1[i] = 1
-                orp_2[i] = 0
-                orp_3[i] = 0
                 adv_1[i] = 1
-                adv_2[i] = 0
             elif x == "days1_weeks2":
                 orp_1[i] = 1
-                orp_2[i] = 0
-                orp_3[i] = 0
-                adv_1[i] = 0
                 adv_2[i] = 1
             elif x == "days1_weeksM":
                 orp_1[i] = 1
-                orp_2[i] = 0
-                orp_3[i] = 0
-                adv_1[i] = 0
-                adv_2[i] = 0
             elif x == "days2_weeks1":
-                orp_1[i] = 0
                 orp_2[i] = 1
-                orp_3[i] = 0
                 adv_1[i] = 1
-                adv_2[i] = 0
             elif x == "days2_weeks2":
-                orp_1[i] = 0
                 orp_2[i] = 1
-                orp_3[i] = 0
-                adv_1[i] = 0
                 adv_2[i] = 1
             elif x == "days2_weeksM":
-                orp_1[i] = 0
                 orp_2[i] = 1
-                orp_3[i] = 0
-                adv_1[i] = 0
-                adv_2[i] = 0
             elif x == "days3_weeks1":
-                orp_1[i] = 0
-                orp_2[i] = 0
                 orp_3[i] = 1
                 adv_1[i] = 1
-                adv_2[i] = 0
             elif x == "days3_weeks2":
-                orp_1[i] = 0
-                orp_2[i] = 0
                 orp_3[i] = 1
-                adv_1[i] = 0
                 adv_2[i] = 1
             elif x == "days3_weeksM":
-                orp_1[i] = 0
-                orp_2[i] = 0
                 orp_3[i] = 1
-                adv_1[i] = 0
-                adv_2[i] = 0
             elif x == "daysM_weeks1":
-                orp_1[i] = 0
-                orp_2[i] = 0
-                orp_3[i] = 0
                 adv_1[i] = 1
-                adv_2[i] = 0
+                orphan[i] = 0
             elif x == "daysM_weeks2":
-                orp_1[i] = 0
-                orp_2[i] = 0
-                orp_3[i] = 0
-                adv_1[i] = 0
                 adv_2[i] = 1
+                orphan[i] = 0
             elif x == "daysM_weeksM":
-                orp_1[i] = 0
-                orp_2[i] = 0
-                orp_3[i] = 0
-                adv_1[i] = 0
-                adv_2[i] = 0
+                orphan[i] = 0
+
         combined["orp_1"]=orp_1
         combined["orp_2"]=orp_2
         combined["orp_3"]=orp_3
         combined["adv_1"]=adv_1
         combined["adv_2"]=adv_2
+
+        combined["orphan"] = orphan
         combined["orp_1, adv_1"] = combined["orp_1"]*combined["adv_1"]
         combined["orp_1, adv_2"] = combined["orp_1"]*combined["adv_2"]
         combined["orp_2, adv_1"] = combined["orp_2"]*combined["adv_1"]
@@ -192,55 +186,68 @@ class Model(object):
         discount_agreed3 = np.nan_to_num(combined["percent_agreed"])
         discount_obtained = np.max([discount_agreed1, discount_agreed2, discount_agreed3], axis=0)
         combined["discount_obtained"] = discount_obtained
-        combined_clean = combined[["host_total_listings_count", "response_rate", "instant", "shared",
-                                       "price_median", "price_std", "occupancy_1m",
-                                       "orp_1", "orp_2", "orp_3", "adv_1", "adv_2",
-                                       "orp_1, adv_1", "orp_1, adv_2", "orp_2, adv_1", "orp_2, adv_2", "orp_3, adv_1", "orp_3, adv_2",
-                                       "orig_percent_off", "discount_asked", "decision", "discount_obtained", "source"]]
 
         # CREATE TRAINING SAMPLES
-        mask_available = combined_clean["decision"] != -1
-        mask_agreed = combined_clean["discount_obtained"] != 0
-        mask_no_source1 = combined_clean["source"] != 1
-        combined_available = combined_clean[mask_available]
-        combined_agreed = combined_clean[mask_agreed * mask_no_source1]
+        mask_available = combined["decision"] != -1
+        mask_agreed = combined["discount_obtained"] != 0
+        mask_no_source1 = combined["source"] != 1
+        combined_available = combined[mask_available]
+        combined_agreed = combined[mask_agreed * mask_no_source1]
         cal_param_1 = ["orp_1", "orp_2", "orp_3", "adv_1", "adv_2"]
+        cal_param_1_num = ["orphan", "length_num", "advance_num"]
         cal_param_2 = ["orp_1, adv_1", "orp_1, adv_2", "orp_2, adv_1", "orp_2, adv_2", "orp_3, adv_1", "orp_3, adv_2"]
-        host_param = ["orig_percent_off", "host_total_listings_count", "response_rate", "instant", "shared",  "price_median", "price_std", "occupancy_1m"]
-        param_rf = cal_param_1 + host_param
-        param_lr = cal_param_1 + host_param + cal_param_2
+        host_param = ["host_total_listings_count", "response_rate", "instant", "shared", "beds", "number_of_reviews",
+                      "price_median", "price_std", "occupancy_1m", "orig_percent_off"]
+        param_rf = cal_param_1_num + host_param
+        param_lr = cal_param_1_num + host_param + cal_param_2
+
         X_responded_rf = combined_available[param_rf].values
         X_responded_lr = combined_available[param_lr].values
         Y_responded = combined_available["decision"].values
-        X_all_rf = combined_clean[param_rf].values
-        X_all_lr = combined_clean[param_lr].values
-        Y_all = combined_clean["decision"].values
+
+        X_all_rf = combined[param_rf].values
+        X_all_lr = combined[param_lr].values
+        Y_all = combined["decision"].values
         Y_all = np.max(zip(Y_all,np.zeros(len(Y_all))), axis=1)
+
         X_discount_rf = combined_agreed[param_rf].values
         X_discount_lr = combined_agreed[param_lr].values
         Y_discount = combined_agreed["discount_obtained"].values
 
         # CREATE PLOT LABELS
-        label_rf = ["1-day orphan", "2-day orphan", "3-day_orphan", "Within 1 week", "1-2 weeks in advance",
-                    "Percent off highest price", "Host listing count", "Host response rate",
-                    "Instant bookable", "Space shared with host", "Usual price", "Price variation", "1-month occupancy"]
-        label_lr = ["1-day orphan", "2-day orphan", "3-day_orphan", "Within 1 week", "1-2 weeks in advance",
+        features = ["orp_1", "orp_2", "orp_3", "adv_1", "adv_2",
+                    "orphan", "length_num", "advance_num",
                     "orp_1, adv_1", "orp_1, adv_2", "orp_2, adv_1", "orp_2, adv_2", "orp_3, adv_1", "orp_3, adv_2",
-                    "Percent off highest price", "Host listing count", "Host response rate",
-                    "Instant bookable", "Space shared with host", "Usual price", "Price variation", "1-month occupancy"]
+                    "host_total_listings_count", "response_rate", "instant", "shared", "beds", "number_of_reviews",
+                    "price_median", "price_std", "occupancy_1m", "orig_percent_off"]
+
+        labels = ["1-day orphan", "2-day orphan", "3-day_orphan", "Within 1 week", "1-2 weeks in advance",
+                  "Orphan day", "Length of stay", "Weeks in advance",
+                  "1-day orphan within 1 week", "1-day orphan 1-2 weeks in advance",
+                  "2-day orphan within 1 week", "2-day orphan 1-2 weeks in advance",
+                  "3-day orphan within 1 week", "3-day orphan 1-2 weeks in advance",
+                  "Host listing count", "Host response rate", "Instant bookable", "Space shared with host", "Number of beds", "Number of reviews",
+                  "Usual price", "Price variation", "1-month occupancy", "Off Highest Price"]
+
+        label_dict = dict(zip(features, labels))
 
         # CLASSIFY NEGOTIABLE HOSTS WITH RANDOM FOREST
-        clf_all_rf = RandomForestClassifier(n_estimators=1000,
-                                        max_features=int(np.sqrt(X_all_rf.shape[1])),
+        clf_all_rf = RandomForestClassifier(n_estimators=200,
+                                        max_features=7,
                                         max_depth=None,
-                                        min_samples_split=1)
+                                        min_samples_split=1,
+                                        n_jobs=-1,
+                                        warm_start=True,
+                                        class_weight = "balanced")
         clf_all_rf.fit(X_all_rf, Y_all)
 
         # CLASSIFY ANTICIPATED DISCOUNT WITH RANDOM FOREST
-        clf_discount_rf = RandomForestRegressor(n_estimators=1000,
-                                        max_features=int(X_discount_rf.shape[1]),
+        clf_discount_rf = RandomForestRegressor(n_estimators=50,
+                                        max_features=7,
                                         max_depth=None,
-                                        min_samples_split=1)
+                                        min_samples_split=1,
+                                        n_jobs=-1,
+                                        warm_start=True)
         clf_discount_rf.fit(X_discount_rf, Y_discount)
 
         # SAVING THE MODEL TO EXTERNAL FILE
@@ -252,10 +259,7 @@ class Model(object):
         return clf_all_rf, clf_discount_rf
     #################################################################################################################
 
-    #################################################################################################################
-    # 2. PREPROCESS: run once every day after new calendar being scraped
-    #       Input: newly scraped calendar, insideAirbnb data
-    #       Output: preprocessed dataframe by listing
+
     #################################################################################################################
     def Preprocess(self):
         # INITIALIZE VARIABLES
@@ -266,6 +270,7 @@ class Model(object):
         output_dir = self.output_dir
         calendar_date = self.calendar_date
         calendar_date_parsed = self.calendar_date_parsed
+        imputer = self.imputer
 
         inside_raw = pd.read_csv("%s/listings_%s.csv"%(input_dir, city))
         calendar_raw = pd.read_json("%s/calendar_%s_%s.json"%(input_dir, city, calendar_date))
@@ -309,17 +314,18 @@ class Model(object):
         instant = inside_raw["instant_bookable"].values
         inside_raw["instant"] = [x=="t" for x in shared]
         ### RESPONSE RATE
-        response_imputer = Imputer(copy=True, missing_values='NaN', strategy='mean', axis=1)
         response_num = np.array([float(response_rate.strip('%'))/100
                                  for response_rate in inside_raw["host_response_rate"].fillna(value="-100%").values])
         response_num = np.array([np.nan if x < 0 else x for x in response_num])
-        response_imputed = response_imputer.fit_transform(response_num)[0]
+        response_imputed = imputer.fit_transform(response_num)[0]
         inside_raw["response_rate"] = response_imputed
 
         # SELECT USEFUL COLUMNS FROM INSIDEAIRBNB DATA
         inside_col = [u'id', u'response_rate', u'host_is_superhost', u'host_total_listings_count',
                       u'number_of_reviews', u'instant', u'shared', u'beds']
         df_listing = inside_raw[inside_col]
+        imputer = self.imputer
+
 
         # MERGE CALENDAR WITH INSIDEAIRBNB DATA
         df_merged = pd.merge(df_calendar, df_listing, on='id', how='inner')
@@ -349,10 +355,7 @@ class Model(object):
     #################################################################################################################
 
 
-    #################################################################################################################
-    # 3. PREDICT: run once every day after new calendar being scraped
-    #       Input: output from TRAIN and PREPROCESS, check-in and -out dates
-    #       Output: prediction in the form of [(id, original price off, negotiable probability, estimated discount), ...]
+
     #################################################################################################################
     def Predict(self, check_in, check_out):
         input_dir = self.input_dir
@@ -361,6 +364,7 @@ class Model(object):
         today_parsed = self.today_parsed
         calendar_date = self.calendar_date
         calendar_date_parsed = self.calendar_date_parsed
+        imputer = self.imputer
 
         df_merged = pd.read_json("%s/preprocessed_calendar_%s.json" %(intermediate_dir, calendar_date))
 
@@ -381,6 +385,7 @@ class Model(object):
                                             & row['min_nights'] <= length)
                                         else 0, axis=1)
         df_bookable = df_merged[mask_bookable==1]
+        orphan = df_bookable.apply(lambda row: row['availabilities'][advance-2]==False & row['availabilities'][advance-1+length]==False, axis=1)
         count_bookable = len(df_bookable)
 
         # CALCULATE ALREADY DISCOUNTED
@@ -389,9 +394,14 @@ class Model(object):
 
         # CALCULATE TRIP DETAILS
         # CREATE TEST SET
-        X_test = np.hstack((np.zeros((count_bookable, 5)), df_bookable[["orig_percent_off", "host_total_listings_count", "response_rate", "instant", "shared",  "price_median", "price_std", "occupancy_1m"]].values))
+        X_trip = np.zeros((count_bookable,3))
+        X_trip[:,0] = orphan
+        X_trip[:,1] = length
+        X_trip[:,2] = advance
+        X_listing = imputer.fit_transform(df_bookable[["host_total_listings_count", "response_rate", "instant", "shared", "beds", "number_of_reviews",
+                                                                        "price_median", "price_std", "occupancy_1m", "orig_percent_off"]].values)
+        X_test = np.hstack((X_trip, X_listing))
 
-        #
         predict_all = clf_all.predict_proba(X_test)[:,1]
         predict_discount = clf_discount.predict(X_test)
 
