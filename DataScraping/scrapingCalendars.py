@@ -13,11 +13,12 @@ months= 4
 listing_info = pd.read_csv('../data/listings/nyc_listings.csv')
 ids = list(listing_info['id'])
 random.shuffle(ids)
-
+with open('ids.json', 'w') as outfile:
+    json.dump(ids, outfile)
 calendars = dict()
 # failed_ids = pd.read_json('calendars/failed_ids.json')
 
-def getCalendar(ids, months, output_file = '../data/calendars/nyc_cal_may.json', logfile = '../data/calendars/failed_ids_may.json'):
+def getCalendar(ids, months, output_file = '../data/calendars/nyc_cal_may_2.json', logfile = '../data/calendars/failed_ids_may.json'):
     counter = 1
     lost_ids = []
     for s in ids:
@@ -44,7 +45,7 @@ def getCalendar(ids, months, output_file = '../data/calendars/nyc_cal_may.json',
             time.sleep(15)
         time.sleep(random.uniform(0.5, 8))
 
-        if(counter % 100 == 0):
+        if(counter % 500 == 0):
             # with open('calendars/' + str(time.time())+'.json', 'w') as outfile:
             with open(output_file, 'w') as outfile:
                 json.dump(calendars, outfile)
