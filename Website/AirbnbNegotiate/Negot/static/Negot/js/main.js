@@ -59,12 +59,12 @@ $(document).ready(function () {
         if($(this).hasClass('yes')){
             $('.member').text('Not a member?');
             $(this).text('Sign up').removeClass('yes');
-            $('.modal-secondblock form').attr('action','login');
+//            $('.modal-secondblock form').attr('action','login');
         } else {
             $('.signup-form').show();
             $('.member').text('Already a member?');
             $(this).text('Login').addClass('yes');
-            $('.modal-secondblock form').attr('action','register');
+//            $('.modal-secondblock form').attr('action','register');
         }
     });
     
