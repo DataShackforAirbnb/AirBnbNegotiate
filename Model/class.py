@@ -278,7 +278,7 @@ class Model(object):
         # CALENDAR: PARSE CALENDAR DATA INTO DATAFRAME
         parsed_calendars = {}
         for i in calendar_raw.keys():
-            parsed_calendars[i] = self.parse_calendar(calendar_raw[i], calendar_date_parsed)
+            parsed_calendars[i] = self.parse_calendar(calendar_raw[i], today_parsed)
         listing_id = [int(key) for key in parsed_calendars.keys()]
         df_calendar = pd.DataFrame({'id': listing_id, 'calendars': parsed_calendars.values()})
 
@@ -333,10 +333,10 @@ class Model(object):
         self.df_merged = df_merged
 
         df_merged.to_json("%s/preprocessed_calendar_%s.json" %(intermediate_dir, calendar_date))
-        return df_merged
+        return
 
     # UTILITY FUNCTIONS FOR PREPROCESS
-    def parse_calendar(self, calendar, date_scraped):
+    def parse_calendar(self, calendar, today):
         date = []
         price_USD = []
         availability = []
@@ -345,7 +345,7 @@ class Model(object):
         for month in calendar['calendar_months']:
             for day in month['days']:
                 day_parsed = dt.datetime.strptime(day['date'], '%Y-%m-%d')
-                if (day_parsed > date_scraped) & (day_parsed not in day_list):
+                if (day_parsed > today) & (day_parsed not in day_list):
                     date.append(day['date'])
                     price_USD.append(day['price']['native_price'])
                     availability.append(day['available'])
@@ -381,12 +381,14 @@ class Model(object):
         advance = (check_in_parsed - today_parsed).days + 1
         length = (check_out_parsed - check_in_parsed).days
         mask_bookable = df_merged.apply(lambda row: 1
-                                        if (np.sum(row['availabilities'][advance-1: advance-1+length]) == length
-                                            & row['min_nights'] <= length)
+                                        if ((np.sum(row['availabilities'][advance-1: advance-1+length]) == length)
+                                            & (row['min_nights'] <= length))
                                         else 0, axis=1)
+
         df_bookable = df_merged[mask_bookable==1]
         orphan = df_bookable.apply(lambda row: row['availabilities'][advance-2]==False & row['availabilities'][advance-1+length]==False, axis=1)
         count_bookable = len(df_bookable)
+        print count_bookable
 
         # CALCULATE ALREADY DISCOUNTED
         df_bookable["nightly_price"] = df_bookable.apply(lambda row: np.mean(row['prices'][advance-1: advance-1+length]), axis=1)
@@ -406,5 +408,3 @@ class Model(object):
         predict_discount = clf_discount.predict(X_test)
 
         return zip(df_bookable["id"].values, df_bookable["orig_percent_off"].values, predict_all, predict_discount)
-
-    #################################################################################################################
